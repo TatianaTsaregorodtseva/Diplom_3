@@ -3,28 +3,14 @@ from selenium import webdriver
 from data import Ingredient
 from api.api_methods import ApiMethods
 from helpers import register_new_user_and_return_login_password, register_new_user_and_order
+from webdriver_factory import WebdriverFactory
 
-
-class WebdriverFactory:
-    """Фабрика для создания WebDriver на основе переданного имени браузера."""
-
-    @staticmethod
-    def getWebdriver(browserName):
-        """Метод создает и возвращает WebDriver для указанного браузера."""
-        if browserName == "firefox":
-            return webdriver.Firefox()
-        elif browserName == "chrome":
-            return webdriver.Chrome()
-        else:
-            raise ValueError(f"Unsupported browser: {browserName}")
-
-
-def pytest_addoption(parser):
-    """
-    Добавляет аргумент командной строки '--browser' для выбора браузера.
-    По умолчанию используется Chrome.
-    """
-    parser.addoption("--browser", action="store", default="chrome", help="Browser to run tests on")
+@pytest.fixture(scope="function")
+def getWebdriver():
+    """Фикстура для инициализации и закрытия драйвера"""
+    driver = WebdriverFactory().get_driver()
+    yield driver
+    driver.quit()
 
 @pytest.fixture
 def browser(request):

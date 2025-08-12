@@ -3,17 +3,15 @@ import allure
 from base_pages.personal_account_page import AccountPage
 import urls
 from locators.personal_account_locators import Locators_account
-from tests.conftest import register
 
 class TestAccount:
 
     @allure.title('Нажимаем кнопку Личный кабинет.')  # декораторы
     @allure.description('На странице ищем кнопку, нажимаем, переходим на страницу личного кабинета, получаем текущий урл, сравниваем текущий урл с урл страницы личного кабинета.')
     def test_press_button_personal_account(self, browser):
-        account_button = AccountPage(browser)
-        account_button.get_url(urls.main_page)
-        url = account_button.press_button_personal_account(Locators_account.personal_account, Locators_account.entrance)
-
+        account_page = AccountPage(browser)
+        account_page.open_main_page()
+        url = account_page.go_to_personal_account()
         assert url == urls.login_page
 
     @allure.title('Переходим в Историю заказов.')  # декораторы

@@ -3,5 +3,6 @@
 /workspace.xml
 .idea/
 .venv/
-
-
+.pytest_cache
+pycache/**
+.tests/pycache

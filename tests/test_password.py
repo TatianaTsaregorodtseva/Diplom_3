@@ -8,11 +8,11 @@ class TestPassword:
     @allure.title('Нажимаем кнопку Восстановить пароль.')  # декораторы
     @allure.description('На странице ищем кнопку, нажимаем, переходим на страницу восстановления пароля, получаем текущий урл, сравниваем текущий урл с урл страницы восстановления пароля.')
     def test_press_button_recover_password(self, browser):
-        password_button = PasswordPage(browser)
-        password_button.get_url(urls.login_page)
-        url = password_button.press_button_recover_password(Locators_password.recover_password, Locators_password.forgot_password)
+        password_page = PasswordPage(browser)
+        password_page.go_to_login_page()
+        current_url = password_page.navigate_to_password_recovery()
 
-        assert url == urls.forgot_password_page
+        assert current_url == urls.forgot_password_page
 
     @allure.title('Вводим email.')  # декораторы
     @allure.description(

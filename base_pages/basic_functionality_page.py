@@ -4,6 +4,7 @@ from base_pages.base_page import BasePage
 from locators.basic_functionality_locators import Locators_functionality
 from tests.conftest import driver
 from locators.personal_account_locators import Locators_account
+import urls
 
 
 class FunctionalityPage(BasePage):
@@ -64,3 +65,47 @@ class FunctionalityPage(BasePage):
         self.find_element_on_page(Locators_account.field_password).send_keys(password)
         self.click_on_element(Locators_account.button_entrance)
         self.click_on_element(Locators_functionality.constructor)
+
+    @allure.step("Перейти на страницу логина")
+    def go_to_login_page(self):
+        self.get_url(urls.login_page)
+
+    @allure.step("Перейти на главную страницу")
+    def go_to_main_page(self):
+        self.get_url(urls.main_page)
+
+    @allure.step("Нажать кнопку 'Конструктор'")
+    def click_constructor_button(self):
+        self.click(Locators_functionality.constructor)
+        return self.get_current_url()
+
+    @allure.step("Нажать кнопку 'Лента заказов'")
+    def click_order_feed_button(self):
+        self.click(Locators_functionality.order_feed)
+        return self.get_current_url()
+
+    @allure.step("Открыть карточку ингредиента")
+    def open_ingredient_card(self):
+        self.click(Locators_functionality.sous)
+        return self.get_text(Locators_functionality.card_ingredient)
+
+    @allure.step("Закрыть карточку ингредиента")
+    def close_ingredient_card(self):
+        self.click(Locators_functionality.sous)
+        self.click(Locators_functionality.button_exit)
+        return not self.is_element_visible(Locators_functionality.card_ingredient)
+
+    @allure.step("Перетащить ингредиент в корзину")
+    def drag_ingredient_to_basket(self):
+        initial_count = self.get_text(Locators_functionality.count)
+        self.drag_and_drop(Locators_functionality.sous, Locators_functionality.basket)
+        new_count = self.get_text(Locators_functionality.count)
+        return int(new_count) > int(initial_count)
+
+    @allure.step("Создать заказ")
+    def create_order(self, email, password):
+        self.drag_and_drop(Locators_functionality.sous, Locators_functionality.basket)
+        self.click(Locators_functionality.place_order1)
+        self.login(email, password)  # предполагается метод login в базовом классе
+        self.click(Locators_functionality.place_order1)
+        return self.get_text(Locators_functionality.active_order)

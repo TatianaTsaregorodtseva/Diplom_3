@@ -6,8 +6,10 @@ from data import Ingredient
 from locators.basic_functionality_locators import Locators_functionality
 from locators.order_feed_locators import Locators_feed
 from locators.personal_account_locators import Locators_account
+from locators.feed_locators import LocatorsFeed
+from locators.basic_functionality_locators import LocatorsFunctionality
 from selenium.webdriver.common.by import By
-
+import urls
 
 
 class FeedPage(BasePage):
@@ -76,3 +78,36 @@ class FeedPage(BasePage):
         final = self.text_of_element(finaly)
         number_order_final = str(number_order) + str(final)
         return number_order_final
+
+    @allure.step("Перейти на страницу ленты заказов")
+    def go_to_order_feed(self):
+        self.get_url(urls.order_feed)
+
+    @allure.step("Открыть карточку заказа")
+    def open_order_card(self):
+        self.click(LocatorsFeed.order_in_feed)
+        return self.get_text(LocatorsFunctionality.card_order)
+
+    @allure.step("Проверить видимость заказов пользователя")
+    def check_user_orders_visibility(self):
+        self.click(LocatorsFeed.personal_account)
+        return self.is_element_visible(LocatorsFeed.order_in_account) and \
+               self.is_element_visible(LocatorsFeed.history_orders)
+
+    @allure.step("Проверить счетчик выполненных заказов за все время")
+    def check_total_orders_counter(self, email, password):
+        initial_count = self.get_text(LocatorsFeed.counter)
+        # Логика создания заказа
+        new_count = self.get_text(LocatorsFeed.counter)
+        return int(new_count) > int(initial_count)
+
+    @allure.step("Проверить счетчик выполненных заказов за сегодня")
+    def check_today_orders_counter(self, email, password):
+        initial_count = self.get_text(LocatorsFeed.counter_now)
+        # Логика создания заказа
+        new_count = self.get_text(LocatorsFeed.counter_now)
+        return int(new_count) > int(initial_count)
+
+    @allure.step("Получить номер заказа в работе")
+    def get_order_number_in_progress(self):
+        return self.get_text(LocatorsFeed.at_work).split()[-1]

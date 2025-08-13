@@ -1,10 +1,20 @@
 import allure
+import urls
 from base_pages.base_page import BasePage
 from locators.personal_account_locators import Locators_account
 
 class AccountPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
+
+    def open_main_page(self):
+        self.driver.get(urls.main_page)
+
+    def go_to_personal_account(self):
+        """Переход в личный кабинет"""
+        self.driver.find_element(*Locators_account.personal_account).click()
+        self.driver.find_element(*Locators_account.entrance).click()
+        return self.driver.current_url
 
     @allure.step('Находим на странице кнопку Личный кабинет и переходим по ней.')
     def press_button_personal_account(self, locator, locator_text):

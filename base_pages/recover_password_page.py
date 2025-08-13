@@ -1,6 +1,7 @@
 import allure
 from base_pages.base_page import BasePage
 from locators.password_page_locators import Locators_password
+import urls
 
 
 class PasswordPage(BasePage):
@@ -31,3 +32,13 @@ class PasswordPage(BasePage):
         self.find_element_on_page(Locators_password.hide_show)
         self.click_on_element(Locators_password.hide_show)
         return self.check_element_is_focused(Locators_password.no_visible_password)
+
+    @allure.step("Перейти на страницу логина")
+    def go_to_login_page(self):
+        self.get_url(urls.login_page)
+
+    @allure.step("Перейти на страницу восстановления пароля")
+    def navigate_to_password_recovery(self):
+            self.click(Locators_password.recover_password)
+            self.wait_for_element_visible(Locators_password.forgot_password)
+            return self.get_current_url()

@@ -12,6 +12,18 @@ class BasePage:
     def __init__(self, driver):
         self.driver = driver
 
+    @allure.step("Открытие страницы: {url}")
+    def open(self, url):
+        self.driver.get(url)
+
+    @allure.step("Клик по элементу с локатором: {locator}")
+    def clicks(self, locator):
+        self.wait.until(EC.element_to_be_clickable(locator)).click()
+
+    @allure.step("Получение текущего URL")
+    def get_current_url(self):
+        return self.driver.current_url
+
     @allure.step('Задаем явное ожидание до видимости элемента на странице.')
     def wait_visibility_of_element(self, locator):
         WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(locator))
